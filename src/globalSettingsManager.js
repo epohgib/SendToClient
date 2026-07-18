@@ -1,7 +1,7 @@
 const ButtonTypes = {
   simple: 0,
   extended: 1,
-}
+};
 
 export const globalSettingsManager = {
   settings: {
@@ -24,8 +24,7 @@ export const globalSettingsManager = {
     }
   },
 
-
   async save() {
     await GM.setValue('settings', JSON.stringify(this.settings));
   },
-}
+};

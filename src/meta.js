@@ -15,5 +15,5 @@
 // ==/UserScript==
 
 /**
-  * @match STC.sites gets replaced with the sites from the sites.json file
+ * @match STC.sites gets replaced with the sites from the sites.json file
  */

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars -- JSX components are referenced via VM.h/VM.m and the parser doesn't see the usage */
 import { profileManager } from './profileManager';
 import { globalSettingsManager } from './globalSettingsManager.js';
 import styles, { stylesheet } from './style.module.css';
@@ -415,7 +416,7 @@ const handlers = [
         .then((e) => e.text())
         .then(
           (e) =>
-            e.replaceAll(/\s/g, '').match(/rss.torrentleech.org\/(.*?)\</)[1]
+            e.replaceAll(/\s/g, '').match(/rss.torrentleech.org\/(.*?)</)[1]
         );
       document.head.appendChild(
         VM.m(<style>{`td.td-quick-download { display: flex; }`}</style>)

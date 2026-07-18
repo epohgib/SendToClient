@@ -1,6 +1,6 @@
 export const XFetch = {
   post: async (url, data, headers = {}) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       GM.xmlHttpRequest({
         method: 'POST',
         url,
@@ -21,7 +21,7 @@ export const XFetch = {
     });
   },
   get: async (url) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       GM.xmlHttpRequest({
         method: 'GET',
         url,

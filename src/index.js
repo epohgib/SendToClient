@@ -17,11 +17,12 @@ const profileQuickSwitcher = () => {
     window.removeEventListener('profileChanged', () => {});
   });
 };
-globalSettingsManager.load().then(()=>
-profileManager.load().then(() => {
-  profileQuickSwitcher();
-  createButtons();
-}));
+globalSettingsManager.load().then(() =>
+  profileManager.load().then(() => {
+    profileQuickSwitcher();
+    createButtons();
+  })
+);
 
 document.addEventListener('PTPAddReleasesFromOtherTrackersComplete', () => {
   console.log('Adding buttons for added releases');

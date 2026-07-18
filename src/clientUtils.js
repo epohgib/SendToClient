@@ -109,8 +109,12 @@ export const addTorrent = async (
       form.append('torrents_start_stopped', 'true');
       form.append('dir_edit', path);
       form.append('label', category);
-      XFetch.post(`${clientUrl}/rutorrent/php/addtorrent.php?json=1`, form, headers);
-    }
+      XFetch.post(
+        `${clientUrl}/rutorrent/php/addtorrent.php?json=1`,
+        form,
+        headers
+      );
+    },
   };
 
   await implementations[client]();
@@ -181,15 +185,19 @@ export async function testClient(clientUrl, username, password, client) {
       // credit to humeur
       let headers = {
         Authorization: `Basic ${btoa(`${username}:${password}`)}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       };
-      let res = await XFetch.post(`${clientUrl}/rutorrent/php/addtorrent.php?json=1`, null, headers);
+      let res = await XFetch.post(
+        `${clientUrl}/rutorrent/php/addtorrent.php?json=1`,
+        null,
+        headers
+      );
       if (res.raw.status !== 401) {
         return true;
       }
-      return false
+      return false;
       // credit to humeur;
-    }
+    },
   };
   let result = await clients[client]();
   return result;
@@ -213,7 +221,7 @@ export async function detectClient(url) {
   const res = await XFetch.get(url);
   const body = await res.text();
   const headers = await res.headers();
-  if (headers.hasOwnProperty('WWW-Authenticate')) {
+  if (Object.hasOwn(headers, 'WWW-Authenticate')) {
     const wwwAuthenticateHeader = headers['WWW-Authenticate'];
     if (wwwAuthenticateHeader.includes('"Transmission"')) return 'trans';
   }

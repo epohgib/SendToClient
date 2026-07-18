@@ -15,5 +15,6 @@ module.exports = {
   globals: {
     VM: true,
     unsafeWindow: 'readonly',
+    GM: 'readonly',
   },
 };
