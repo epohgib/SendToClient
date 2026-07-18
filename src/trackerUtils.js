@@ -2,27 +2,42 @@ import { profileManager } from './profileManager';
 import { globalSettingsManager } from './globalSettingsManager.js';
 import styles, { stylesheet } from './style.module.css';
 function ExtendeSTCProfile({ panel, profile, torrentUrl }) {
-  return (<button style="display: block; padding: 5px; margin: 5px; cursor: pointer;" onclick={
-    (e)=>{
-      profile.addTorrent(torrentUrl);
-      return panel.hide();
-    }
-  }>
-    {profile.name}
-  </button>
+  return (
+    <button
+      style="display: block; padding: 5px; margin: 5px; cursor: pointer;"
+      onclick={(e) => {
+        profile.addTorrent(torrentUrl);
+        return panel.hide();
+      }}
+    >
+      {profile.name}
+    </button>
   );
-};
+}
 function ExtendedSTCElement({ panel, torrentUrl }) {
   let profiles = [];
   for (let profile of profileManager.profiles) {
-    profiles.push(<ExtendeSTCProfile panel={panel} profile={profile} torrentUrl={torrentUrl}/>);
+    profiles.push(
+      <ExtendeSTCProfile
+        panel={panel}
+        profile={profile}
+        torrentUrl={torrentUrl}
+      />
+    );
   }
-  return (<div style="display: flex; flex-direction: column; align-items: center; justify-content:center;">
-    Choose which profile to send to
-   {profiles}
-  <button style="display: block; padding: 5px; margin: 5px; background-color: #fe0000; cursor: pointer;" onclick={() => panel.hide()}>Cancel</button>
-    </div>);
-};
+  return (
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content:center;">
+      Choose which profile to send to
+      {profiles}
+      <button
+        style="display: block; padding: 5px; margin: 5px; background-color: #fe0000; cursor: pointer;"
+        onclick={() => panel.hide()}
+      >
+        Cancel
+      </button>
+    </div>
+  );
+}
 
 const ExtendedSTC = (torrentUrl) => {
   const panel = VM.getPanel({
@@ -31,7 +46,9 @@ const ExtendedSTC = (torrentUrl) => {
     style: stylesheet,
   });
   // give the panel access to itself :)
-  panel.setContent(<ExtendedSTCElement panel={panel} torrentUrl={torrentUrl} />);
+  panel.setContent(
+    <ExtendedSTCElement panel={panel} torrentUrl={torrentUrl} />
+  );
   panel.setMovable(false);
   panel.wrapper.children[0].classList.add(styles.wrapper);
   let original_show = panel.show;
@@ -49,24 +66,31 @@ const ExtendedSTC = (torrentUrl) => {
 };
 const XSTBTN = ({ torrentUrl, freeleech }) => {
   return (
-    <a title="Add to client - extended!"
-       href="#"
-       className="sendtoclient"
-       onclick={async (e) => {
-          e.preventDefault();
-          if (freeleech)
-           if (!confirm('After sending to client a feeleech token will be consumed!'))
+    <a
+      title="Add to client - extended!"
+      href="#"
+      className="sendtoclient"
+      onclick={async (e) => {
+        e.preventDefault();
+        if (freeleech)
+          if (
+            !confirm(
+              'After sending to client a feeleech token will be consumed!'
+            )
+          )
             return;
 
-          ExtendedSTC(torrentUrl);
-       }}
+        ExtendedSTC(torrentUrl);
+      }}
     >
-    X{freeleech ? "F" : ""}ST
+      X{freeleech ? 'F' : ''}ST
     </a>
   );
-}
+};
 const STBTN = ({ torrentUrl }) => {
-  return globalSettingsManager.button_type ? <XSTBTN freeleech={false} torrentUrl={torrentUrl}/> : (
+  return globalSettingsManager.button_type ? (
+    <XSTBTN freeleech={false} torrentUrl={torrentUrl} />
+  ) : (
     <a
       title={`Add to ${profileManager.selectedProfile.name}.`}
       href="#"
@@ -83,7 +107,9 @@ const STBTN = ({ torrentUrl }) => {
   );
 };
 const FSTBTN = ({ torrentUrl }) => {
-  return globalSettingsManager.button_type ? <XSTBTN freeleech={true} torrentUrl={torrentUrl} /> : (
+  return globalSettingsManager.button_type ? (
+    <XSTBTN freeleech={true} torrentUrl={torrentUrl} />
+  ) : (
     <a
       href="#"
       title={`Freeleechize and add to ${profileManager.selectedProfile.name}.`}
@@ -102,45 +128,88 @@ const FSTBTN = ({ torrentUrl }) => {
   );
 };
 
-const handlers = [{
-  name: 'Gazelle',
-  matches: ["gazellegames.net", "animebytes.tv", "orpheus.network", "passthepopcorn.me", "greatposterwall.com", "redacted.sh", "jpopsuki.eu", "tv-vault.me", "sugoimusic.me", "ianon.app", "alpharatio.cc", "uhdbits.org", "morethantv.me", "empornium.is", "deepbassnine.com", "broadcasthe.net", "secret-cinema.pw"],
-  run: async () => {
-    const links = Array.from(document.querySelectorAll('a')).filter(a =>
-      a.innerText.trim() === 'DL' ||
-      a.title === 'Download Torrent' ||
-      a.classList.contains('link_1')
-    );
+const handlers = [
+  {
+    name: 'Gazelle',
+    matches: [
+      'gazellegames.net',
+      'animebytes.tv',
+      'orpheus.network',
+      'passthepopcorn.me',
+      'greatposterwall.com',
+      'redacted.sh',
+      'jpopsuki.eu',
+      'tv-vault.me',
+      'sugoimusic.me',
+      'ianon.app',
+      'alpharatio.cc',
+      'uhdbits.org',
+      'morethantv.me',
+      'empornium.is',
+      'deepbassnine.com',
+      'broadcasthe.net',
+      'secret-cinema.pw',
+    ],
+    run: async () => {
+      const links = Array.from(document.querySelectorAll('a')).filter(
+        (a) =>
+          a.innerText.trim() === 'DL' ||
+          a.title === 'Download Torrent' ||
+          a.classList.contains('link_1')
+      );
 
-    for (const a of links) {
-      let parent = a.closest('.basic-movie-list__torrent__action');
-      if (!parent) {
-        parent = a.parentElement;
-      }
-      let torrentUrl = a.href;
-      let buttons = Array.from(parent.childNodes).filter(e => e.nodeName !== '#text');
-      let fl = Array.from(parent.querySelectorAll('a')).find(a => a.innerText === 'FL');
-      let fst = fl ? VM.h(VM.Fragment, null, "\xA0|\xA0", VM.h(FSTBTN, {
-        torrentUrl: fl.href
-      })) : null;
-
-      parent.innerHTML = ''; // Use '' instead of null to avoid issues
-      parent.appendChild(VM.m(VM.h(VM.Fragment, null, "[\xA0", buttons.map(e => VM.h(VM.Fragment, null, e, " | ")), VM.h(STBTN, {
-        torrentUrl: torrentUrl
-      }), fst, "\xA0]")));
-    }
-
-    window.addEventListener('profileChanged', () => {
-      document.querySelectorAll('a.sendtoclient').forEach(e => {
-        if (e.title.includes('Freeleechize')) {
-          e.title = `Freeleechize and add to ${profileManager.selectedProfile.name}.`;
-        } else {
-          e.title = `Add to ${profileManager.selectedProfile.name}.`;
+      for (const a of links) {
+        let parent = a.closest('.basic-movie-list__torrent__action');
+        if (!parent) {
+          parent = a.parentElement;
         }
+        let torrentUrl = a.href;
+        let buttons = Array.from(parent.childNodes).filter(
+          (e) => e.nodeName !== '#text'
+        );
+        let fl = Array.from(parent.querySelectorAll('a')).find(
+          (a) => a.innerText === 'FL'
+        );
+        let fst = fl
+          ? VM.h(
+              VM.Fragment,
+              null,
+              '\xA0|\xA0',
+              VM.h(FSTBTN, {
+                torrentUrl: fl.href,
+              })
+            )
+          : null;
+
+        parent.innerHTML = ''; // Use '' instead of null to avoid issues
+        parent.appendChild(
+          VM.m(
+            VM.h(
+              VM.Fragment,
+              null,
+              '[\xA0',
+              buttons.map((e) => VM.h(VM.Fragment, null, e, ' | ')),
+              VM.h(STBTN, {
+                torrentUrl: torrentUrl,
+              }),
+              fst,
+              '\xA0]'
+            )
+          )
+        );
+      }
+
+      window.addEventListener('profileChanged', () => {
+        document.querySelectorAll('a.sendtoclient').forEach((e) => {
+          if (e.title.includes('Freeleechize')) {
+            e.title = `Freeleechize and add to ${profileManager.selectedProfile.name}.`;
+          } else {
+            e.title = `Add to ${profileManager.selectedProfile.name}.`;
+          }
+        });
       });
-    });
-  }
-},
+    },
+  },
   {
     name: 'BLU UNIT3D',
     matches: 'sites[BLU UNIT3D]',
@@ -383,16 +452,16 @@ const handlers = [{
         );
       };
       // Primary: tooltip DL links (Gazelle-style markup)
-      const tooltipLinks = Array.from(document.querySelectorAll('a.tooltip')).filter(
-        (a) => a.innerText.trim() === 'DL'
-      );
+      const tooltipLinks = Array.from(
+        document.querySelectorAll('a.tooltip')
+      ).filter((a) => a.innerText.trim() === 'DL');
       if (tooltipLinks.length > 0) {
         tooltipLinks.forEach(inject);
       } else {
         // Fallback: any anchor with download action
-        Array.from(document.querySelectorAll('a[href*="action=download"]')).forEach(
-          inject
-        );
+        Array.from(
+          document.querySelectorAll('a[href*="action=download"]')
+        ).forEach(inject);
       }
     },
   },
@@ -405,13 +474,8 @@ const handlers = [{
           .querySelectorAll('a.directDownload[title="Direct Download"]')
           .forEach((a) => {
             if (a.parentElement.querySelector('a.sendtoclient')) return;
-            // Find next non-whitespace sibling to insert before
-            let next = a.nextSibling;
-            while (next && next.nodeType === 3 && !next.textContent.trim()) {
-              next = next.nextSibling;
-            }
             a.insertAdjacentElement(
-              'beforebegin',
+              'afterend',
               VM.m(
                 <span>
                   {'\u00A0|\u00A0'}
@@ -433,13 +497,18 @@ const handlers = [{
 ];
 
 export const createButtons = async () => {
-  document.querySelectorAll('.sendtoclient').forEach(button => button.remove());
+  document
+    .querySelectorAll('.sendtoclient')
+    .forEach((button) => button.remove());
 
   for (const handler of handlers) {
     const regex = handler.matches.join('|');
     if (unsafeWindow.location.href.match(regex)) {
       handler.run();
-      console.log(`%c[SendToClient] Using engine {${handler.name}}`, 'color: #42adf5; font-weight: bold; font-size: 1.5em;');
+      console.log(
+        `%c[SendToClient] Using engine {${handler.name}}`,
+        'color: #42adf5; font-weight: bold; font-size: 1.5em;'
+      );
       return handler.name;
     }
   }

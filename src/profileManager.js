@@ -75,7 +75,7 @@ export const profileManager = {
     this.profiles.push(profile);
   },
   removeProfile: function (id) {
-    this.profiles = this.profiles.find((p) => p.id === id);
+    this.profiles = this.profiles.filter((p) => p.id !== id);
   },
   getProfile: function (id) {
     return (
