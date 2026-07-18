@@ -12,11 +12,19 @@ qBittorrent, Transmission, Deluge, ruTorrent, and Flood (this lets you use anyth
 
 ## **Supported sites:**
 
-**Gazelle:** PTP, GGn, AB, OPS, GPW, RED, JPS, TVV, Sugoi Music, iAnon, AR, UHDB, MTV, EMP, BTN, SC (Some of these are untested an may not work, please report so)
+**Gazelle:** AB, AR, BTN, DB9, EMP, GGn, GPW, iAnon, JPS, MTV, OPS, PTP, RED, SC, Sugoi Music, TVV, UHDB
 
-**UNIT3D:** BLU, Aither, DT, Telly, TS, BHD (F3NIX fork)
+**UNIT3D (BLU family):** Aither, BLU, FNP, LST, OTW, RFX
 
-**Others:** TorrentLeech, AnilistBytes script
+**UNIT3D (other):** DesiTorrents, JPTV, Telly, TorrentSeeds
+
+**UNIT3D (F3NIX fork):** Beyond-HD
+
+**HUNO:** Hawke
+
+**Others:** Karagarga, TorrentLeech, Anilist (via AnilistBytes script), PhoenixProject, MyAnonamouse
+
+(Some sites are untested and may not work — please open an issue if you find one)
 
 ## **Building from source:**
 
