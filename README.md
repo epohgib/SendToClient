@@ -47,6 +47,8 @@ git push --tags
 Users then auto-update from `releases/latest/download/SendToClient.user.js` (set as `@downloadURL` / `@updateURL` in `src/meta.js`).
 
 ## **Changelog:**
+[2.4.0](https://github.com/epohgib/SendToClient/releases/download/v2.4.0/SendToClient.user.js) - Added PhoenixProject and MyAnonamouse support; fixed ST button positioning on MyAnonamouse and the profile removal bug; build now runs through `npm run build` and releases are published automatically via GitHub Actions on tag push.
+
 [2.3.1](https://gist.github.com/notmarek/4f8fea8ae4e7cc524cba51a3594a128c/raw/b8ba70c85aadebfbe4536be23b6907e35e7c47c1/SendToClient.user.js) - Fixed a bug that killed the whole extension
 
 [2.3.0](https://gist.github.com/notmarek/4f8fea8ae4e7cc524cba51a3594a128c/raw/61e0b340385905f03e0895ffdca42e52fea0ea54/SendToClient.user.js) - Extended ST button - let's you pick the profile on each torrent seperatly
