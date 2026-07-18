@@ -2,7 +2,7 @@
 
 <a style="color: #6fa8dc" href="https://github.com/epohgib/SendToClient/releases/latest/download/SendToClient.user.js">Install</a> | <a style="color: #6aa84f" href="https://github.com/epohgib/SendToClient">View Source</a>
 
-This script let's you send torrents straight to your download client with a single button!
+This script lets you send torrents straight to your download client with a single button!
 
 </h1>
 

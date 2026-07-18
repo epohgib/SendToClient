@@ -1,10 +1,29 @@
 {
   "name": "sendtoclient",
   "version": "2.4.0",
-  "description": "",
+  "description": "Painless one-click send-to-client for private torrent trackers (qBittorrent, Transmission, Deluge, ruTorrent, Flood).",
   "author": "notmarek & friends",
   "license": "MIT",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/epohgib/SendToClient.git"
+  },
+  "homepage": "https://github.com/epohgib/SendToClient#readme",
+  "bugs": {
+    "url": "https://github.com/epohgib/SendToClient/issues"
+  },
+  "keywords": [
+    "userscript",
+    "torrent",
+    "qbittorrent",
+    "transmission",
+    "deluge",
+    "rutorrent",
+    "flood",
+    "gazelle",
+    "unit3d"
+  ],
   "engines": {
     "node": ">=16"
   },
