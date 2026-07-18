@@ -21,6 +21,31 @@ qBittorrent, Transmission, Deluge, ruTorrent, and Flood (this lets you use anyth
 
 **Others:** TorrentLeech, AnilistBytes script
 
+## **Building from source:**
+
+Requires Node.js 16+.
+
+```bash
+npm install        # install dependencies
+npm run build      # produce dist/SendToClient.user.js
+npm run dev        # watch mode for development
+npm run lint       # eslint + prettier check
+```
+
+The output userscript is written to `dist/SendToClient.user.js` (gitignored).
+
+### Cutting a release
+
+The repo is wired to GitHub Actions: pushing a `v*` tag triggers a build and attaches the userscript to a GitHub Release.
+
+```bash
+npm version patch   # or minor / major
+git push
+git push --tags
+```
+
+Users then auto-update from `releases/latest/download/SendToClient.user.js` (set as `@downloadURL` / `@updateURL` in `src/meta.js`).
+
 ## **Changelog:**
 [2.3.1](https://gist.github.com/notmarek/4f8fea8ae4e7cc524cba51a3594a128c/raw/b8ba70c85aadebfbe4536be23b6907e35e7c47c1/SendToClient.user.js) - Fixed a bug that killed the whole extension
 
