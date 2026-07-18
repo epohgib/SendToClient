@@ -366,6 +366,70 @@ const handlers = [{
         profileManager.selectedProfile.addTorrent(torrentUrl);
     },
   },
+  {
+    name: 'PhoenixProject',
+    matches: 'sites[PhoenixProject]',
+    run: async () => {
+      const inject = (a) => {
+        if (a.parentElement.querySelector('a.sendtoclient')) return;
+        a.insertAdjacentElement(
+          'afterend',
+          VM.m(
+            <span>
+              {'\u00A0|\u00A0'}
+              <STBTN torrentUrl={a.href} />
+            </span>
+          )
+        );
+      };
+      // Primary: tooltip DL links (Gazelle-style markup)
+      const tooltipLinks = Array.from(document.querySelectorAll('a.tooltip')).filter(
+        (a) => a.innerText.trim() === 'DL'
+      );
+      if (tooltipLinks.length > 0) {
+        tooltipLinks.forEach(inject);
+      } else {
+        // Fallback: any anchor with download action
+        Array.from(document.querySelectorAll('a[href*="action=download"]')).forEach(
+          inject
+        );
+      }
+    },
+  },
+  {
+    name: 'MyAnonamouse',
+    matches: 'sites[MyAnonamouse]',
+    run: async () => {
+      const injectST = () => {
+        document
+          .querySelectorAll('a.directDownload[title="Direct Download"]')
+          .forEach((a) => {
+            if (a.parentElement.querySelector('a.sendtoclient')) return;
+            // Find next non-whitespace sibling to insert before
+            let next = a.nextSibling;
+            while (next && next.nodeType === 3 && !next.textContent.trim()) {
+              next = next.nextSibling;
+            }
+            a.insertAdjacentElement(
+              'beforebegin',
+              VM.m(
+                <span>
+                  {'\u00A0|\u00A0'}
+                  <STBTN torrentUrl={a.href} />
+                </span>
+              )
+            );
+          });
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', injectST);
+      } else {
+        injectST();
+      }
+      const observer = new MutationObserver(() => injectST());
+      observer.observe(document.body, { childList: true, subtree: true });
+    },
+  },
 ];
 
 export const createButtons = async () => {
