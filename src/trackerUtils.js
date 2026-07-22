@@ -215,9 +215,13 @@ const handlers = [
     name: 'BLU UNIT3D',
     matches: 'sites[BLU UNIT3D]',
     run: async (rid = null) => {
-      rid = await fetch(
-        document.querySelector('.top-nav__username').href + '/rsskeys'
-      )
+      const profileLink = document.querySelector('a.top-nav__username');
+      if (!profileLink || !profileLink.href) {
+        throw new Error(
+          '[SendToClient] Could not locate user profile link (.top-nav__username) on this BLU UNIT3D site.'
+        );
+      }
+      rid = await fetch(profileLink.href + '/rsskeys')
         .then((e) => e.text())
         .then((e) => e.replaceAll(/\s/g, ''))
         .then((e) => e.match(/tbody>*<tr>*<td>*(.*?)<\/td>/)[1]);

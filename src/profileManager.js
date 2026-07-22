@@ -107,10 +107,7 @@ export const profileManager = {
   },
   getNextId: function () {
     if (this.profiles.length === 0) return 0;
-    return (
-      Number(this.profiles.sort((a, b) => Number(b.id) > Number(a.id))[0].id) +
-      1
-    );
+    return Math.max(...this.profiles.map((p) => Number(p.id))) + 1;
   },
   save: function () {
     GM.setValue('profiles', JSON.stringify(this.profiles));

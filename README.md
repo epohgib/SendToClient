@@ -52,6 +52,8 @@ git push --tags
 Users then auto-update from `releases/latest/download/SendToClient.user.js` (set as `@downloadURL` / `@updateURL` in `src/meta.js`).
 
 ## **Changelog:**
+[2.5.1](https://github.com/epohgib/SendToClient/releases/download/v2.5.1/SendToClient.user.js) - Fixed profile overwrite when adding a 3rd+ profile (#14, #6) and the "Cannot read properties of undefined (reading 'href')" crash on BLU UNIT3D sites where the user-profile link selector no longer matches (#13).
+
 [2.5.0](https://github.com/epohgib/SendToClient/releases/download/v2.5.0/SendToClient.user.js) - Author metadata updated to "notmarek & friends"; dropped redundant `www.myanonamouse.net` from `@match`; added description/repository/homepage/keywords to `package.json`.
 
 [2.4.0](https://github.com/epohgib/SendToClient/releases/download/v2.4.0/SendToClient.user.js) - Added PhoenixProject and MyAnonamouse support; fixed ST button positioning on MyAnonamouse and the profile removal bug; build now runs through `npm run build` and releases are published automatically via GitHub Actions on tag push.
