@@ -12,15 +12,24 @@ const clientSelectorOnChange = (e, shadow) => {
       e.target.value === 'flood'
         ? document.location.href.replace(/\/overview|login\/$/, '')
         : document.location.href.replace(/\/$/, '');
-  shadow.querySelector('#category').hidden = e.target.value !== 'qbit';
-  shadow.querySelector("label[for='category']").hidden =
-    e.target.value !== 'qbit';
-  if (e.target.value === 'qbit') {
+  const hasCategories = ['qbit', 'qui'].includes(e.target.value);
+  shadow.querySelector('#category').hidden = !hasCategories;
+  shadow.querySelector("label[for='category']").hidden = !hasCategories;
+  if (hasCategories) {
     shadow.querySelector('#category>select').onload();
   }
+  const isQui = e.target.value === 'qui';
   shadow.querySelector("label[for='username']").hidden =
-    e.target.value === 'deluge';
-  shadow.querySelector('#username').hidden = e.target.value === 'deluge';
+    e.target.value === 'deluge' || isQui;
+  shadow.querySelector('#username').hidden =
+    e.target.value === 'deluge' || isQui;
+  shadow.querySelector("label[for='password']").hidden = isQui;
+  shadow.querySelector('#password').hidden = isQui;
+  shadow.querySelector("label[for='apiKey']").hidden = !isQui;
+  shadow.querySelector('#apiKey').hidden = !isQui;
+  shadow.querySelector('#host').placeholder = isQui
+    ? 'http://localhost:7476/qui/instances/1'
+    : '';
 };
 
 function ClientSelector({ shadow }) {
@@ -39,6 +48,7 @@ function ClientSelector({ shadow }) {
         <option value="deluge">Deluge</option>
         <option value="flood">Flood</option>
         <option value="qbit">qBittorrent</option>
+        <option value="qui">qui</option>
         <option value="trans">Transmission</option>
         <option value="rutorrent">ruTorrent</option>
         <option value="unknown" hidden>
@@ -56,6 +66,7 @@ const profileOnSave = (e, shadow) => {
   profile.host = shadow.querySelector('#host').value;
   profile.username = shadow.querySelector('#username').value;
   profile.password = shadow.querySelector('#password').value;
+  profile.apiKey = shadow.querySelector('#apiKey').value;
   profile.client = shadow.querySelector('#client').value;
   profile.saveLocation = shadow.querySelector('#saveLocation').value;
   profile.name = shadow.querySelector('#profilename').value;
@@ -101,6 +112,7 @@ function profileSelectHandler(e, shadow) {
   shadow.querySelector('#host').value = profile.host;
   shadow.querySelector('#username').value = profile.username;
   shadow.querySelector('#password').value = profile.password;
+  shadow.querySelector('#apiKey').value = profile.apiKey;
   shadow.querySelector('#client').value = profile.client;
   shadow.querySelector('#saveLocation').value = profile.saveLocation;
   shadow.querySelector('#profilename').value = profile.name;
@@ -265,8 +277,14 @@ function SettingsElement({ panel }) {
           <input type="text" id="username" name="username" />
           <label for="password">Password:</label>
           <input type="password" id="password" name="password" />
+          <label for="apiKey" hidden>
+            API key:
+          </label>
+          <input type="password" id="apiKey" name="apiKey" hidden />
           <CategorySelector
-            hidden={profileManager.selectedProfile.client !== 'qbit'}
+            hidden={
+              !['qbit', 'qui'].includes(profileManager.selectedProfile.client)
+            }
             shadow={shadow}
           />
 
@@ -293,7 +311,8 @@ function SettingsElement({ panel }) {
                 shadow.querySelector('#host').value,
                 shadow.querySelector('#username').value,
                 shadow.querySelector('#password').value,
-                shadow.querySelector('select#client').value
+                shadow.querySelector('select#client').value,
+                shadow.querySelector('#apiKey').value
               ))
                 ? 'Client seems to be working'
                 : "Client doesn't seem to be working";

@@ -20,13 +20,14 @@ export const XFetch = {
       });
     });
   },
-  get: async (url) => {
+  get: async (url, headers = {}) => {
     return new Promise((resolve) => {
       GM.xmlHttpRequest({
         method: 'GET',
         url,
         headers: {
           Accept: 'application/json',
+          ...headers,
         },
         onload: (res) => {
           resolve({

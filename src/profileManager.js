@@ -1,4 +1,9 @@
-import { testClient, addTorrent, getCategories } from './clientUtils';
+import {
+  testClient,
+  addTorrent,
+  getCategories,
+  getQuiCategories,
+} from './clientUtils';
 
 class Profile {
   constructor(
@@ -10,7 +15,8 @@ class Profile {
     client,
     saveLocation,
     category,
-    linkedTo = []
+    linkedTo = [],
+    apiKey = ''
   ) {
     this.id = id;
     this.name = name;
@@ -21,6 +27,7 @@ class Profile {
     this.saveLocation = saveLocation;
     this.category = category;
     this.linkedTo = linkedTo;
+    this.apiKey = apiKey;
   }
   async linkTo(site, replace = false) {
     let alreadyLinkedTo = profileManager.profiles.find((p) =>
@@ -41,6 +48,8 @@ class Profile {
     profileManager.save();
   }
   async getCategories() {
+    if (this.client === 'qui')
+      return await getQuiCategories(this.host, this.apiKey);
     if (this.client != 'qbit') return [];
     let res = await getCategories(this.host, this.username, this.password);
     console.log(res);
@@ -51,7 +60,8 @@ class Profile {
       this.host,
       this.username,
       this.password,
-      this.client
+      this.client,
+      this.apiKey
     );
   }
 
@@ -63,7 +73,8 @@ class Profile {
       this.password,
       this.client,
       this.saveLocation,
-      this.category
+      this.category,
+      this.apiKey
     );
   }
 }
@@ -127,7 +138,8 @@ export const profileManager = {
             p.client,
             p.saveLocation,
             p.category ?? '',
-            p.linkedTo ?? []
+            p.linkedTo ?? [],
+            p.apiKey ?? ''
           )
       );
     }
