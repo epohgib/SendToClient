@@ -8,7 +8,7 @@ This script lets you send torrents straight to your download client with a singl
 
 ## **Limitations:**
 
-qBittorrent, Transmission, Deluge, ruTorrent, and Flood (this lets you use anything flood supports) are supported, if you want to see your client added leave a comment.
+qBittorrent, qui, Transmission, Deluge, ruTorrent, and Flood (this lets you use anything flood supports) are supported, if you want to see your client added leave a comment.
 
 ## **Supported sites:**
 

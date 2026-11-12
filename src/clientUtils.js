@@ -1,5 +1,15 @@
 import { XFetch } from './XFetch';
 
+export const parseQuiUrl = (clientUrl) => {
+  const match = clientUrl.match(/^(https?:\/\/.+)\/instances\/(\d+)/);
+  if (!match) {
+    throw new Error(
+      `[SendToClient] Invalid qui URL "${clientUrl}". Expected an instance URL such as http://localhost:7476/qui/instances/1`
+    );
+  }
+  return { base: match[1], instance: match[2] };
+};
+
 export const addTorrent = async (
   torrentUrl,
   clientUrl,
@@ -7,9 +17,37 @@ export const addTorrent = async (
   password,
   client,
   path,
-  category
+  category,
+  apiKey
 ) => {
   let implementations = {
+    qui: async () => {
+      const { base, instance } = parseQuiUrl(clientUrl);
+      let tor_data = new FormData();
+      tor_data.append('urls', torrentUrl);
+      if (path) {
+        tor_data.append('savepath', path);
+      }
+      if (category) {
+        tor_data.append('category', category);
+      }
+      const res = await XFetch.post(
+        `${base}/api/instances/${instance}/torrents`,
+        tor_data,
+        { 'X-API-Key': apiKey }
+      );
+      if (
+        res.raw.status !== 201 &&
+        !(
+          res.raw.status === 500 &&
+          res.raw.responseText.includes('conflicts detected')
+        )
+      ) {
+        throw new Error(
+          `[SendToClient] qui failed to add the torrent (status ${res.raw.status}): ${res.raw.responseText}`
+        );
+      }
+    },
     qbit: async () => {
       XFetch.post(
         `${clientUrl}/api/v2/auth/login`,
@@ -120,8 +158,25 @@ export const addTorrent = async (
   await implementations[client]();
 };
 
-export async function testClient(clientUrl, username, password, client) {
+export async function testClient(
+  clientUrl,
+  username,
+  password,
+  client,
+  apiKey
+) {
   let clients = {
+    qui: async () => {
+      try {
+        const { base } = parseQuiUrl(clientUrl);
+        const res = await XFetch.get(`${base}/api/instances`, {
+          'X-API-Key': apiKey,
+        });
+        return res.raw.status === 200;
+      } catch (e) {
+        return false;
+      }
+    },
     trans: async () => {
       let headers = {
         Authorization: `Basic ${btoa(`${username}:${password}`)}`,
@@ -211,6 +266,19 @@ export const getCategories = async (clientUrl, username, password) => {
   );
   let res = await XFetch.get(`${clientUrl}/api/v2/torrents/categories`);
   try {
+    return Object.keys(await res.json());
+  } catch {
+    return [];
+  }
+};
+
+export const getQuiCategories = async (clientUrl, apiKey) => {
+  try {
+    const { base, instance } = parseQuiUrl(clientUrl);
+    const res = await XFetch.get(
+      `${base}/api/instances/${instance}/categories`,
+      { 'X-API-Key': apiKey }
+    );
     return Object.keys(await res.json());
   } catch {
     return [];

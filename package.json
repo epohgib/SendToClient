@@ -1,7 +1,7 @@
 {
   "name": "sendtoclient",
   "version": "2.5.2",
-  "description": "Painless one-click send-to-client for private torrent trackers (qBittorrent, Transmission, Deluge, ruTorrent, Flood).",
+  "description": "Painless one-click send-to-client for private torrent trackers (qBittorrent, qui, Transmission, Deluge, ruTorrent, Flood).",
   "author": "notmarek & friends",
   "license": "MIT",
   "private": true,
