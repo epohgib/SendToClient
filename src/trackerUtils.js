@@ -164,60 +164,47 @@ const handlers = [
         if (!parent) {
           parent = a.parentElement;
         }
+        // If this row already has a SendToClient button, there is nothing to
+        // do. This also makes the handler idempotent when it runs again after
+        // a soft navigation or the PTP cross-tracker event.
+        if (parent.querySelector('a.sendtoclient')) continue;
+
         let torrentUrl = a.href;
-        let buttons = Array.from(parent.childNodes).filter(
-          (e) => e.nodeName !== '#text'
-        );
-        // Some Gazelle sites wrap the whole action row in a single element
-        // that already draws the surrounding [ ... ]. Unwrap it so we don't
-        // re-add a second pair of brackets around the row (issue: [[DL | ...]]).
-        if (
-          buttons.length === 1 &&
-          buttons[0].textContent.trim().startsWith('[') &&
-          buttons[0].textContent.trim().endsWith(']')
-        ) {
-          buttons = Array.from(buttons[0].childNodes).filter(
-            (e) => e.nodeName !== '#text'
-          );
-        }
         let fl = Array.from(parent.querySelectorAll('a')).find(
           (a) => a.innerText === 'FL'
         );
-        // OPS and some other Gazelle sites put the surrounding [ ... ] in
-        // the parent element, outside the row we are rewriting. Detecting
-        // that pair here avoids emitting a second pair inside it.
-        const prevText = parent.previousSibling?.textContent?.trim() || '';
-        const nextText = parent.nextSibling?.textContent?.trim() || '';
-        const siteHasBrackets =
-          prevText.endsWith('[') && nextText.startsWith(']');
 
-        let fst = fl
-          ? VM.h(
-              VM.Fragment,
-              null,
-              '\xA0|\xA0',
-              VM.h(FSTBTN, {
-                torrentUrl: fl.href,
-              })
-            )
-          : null;
-
-        parent.innerHTML = ''; // Use '' instead of null to avoid issues
-        parent.appendChild(
+        // Preserve the site's existing markup, including whatever [ ... ]
+        // decoration it already draws. Rebuilding the row here used to add a
+        // second pair of brackets on sites that draw them themselves.
+        const nodes = Array.from(parent.childNodes);
+        const closing = nodes
+          .slice()
+          .reverse()
+          .find(
+            (n) => n.nodeType === Node.TEXT_NODE && n.textContent.includes(']')
+          );
+        const insertBeforeClosing = (node) => {
+          if (closing) parent.insertBefore(node, closing);
+          else parent.appendChild(node);
+        };
+        insertBeforeClosing(
           VM.m(
-            VM.h(
-              VM.Fragment,
-              null,
-              siteHasBrackets ? null : '[\xA0',
-              buttons.map((e) => VM.h(VM.Fragment, null, e, ' | ')),
-              VM.h(STBTN, {
-                torrentUrl: torrentUrl,
-              }),
-              fst,
-              siteHasBrackets ? null : '\xA0]'
-            )
+            VM.h(VM.Fragment, null, '\xA0|\xA0', VM.h(STBTN, { torrentUrl }))
           )
         );
+        if (fl) {
+          insertBeforeClosing(
+            VM.m(
+              VM.h(
+                VM.Fragment,
+                null,
+                '\xA0|\xA0',
+                VM.h(FSTBTN, { torrentUrl: fl.href })
+              )
+            )
+          );
+        }
       }
 
       window.addEventListener('profileChanged', () => {
