@@ -1,5 +1,10 @@
 import { XFetch } from './XFetch';
 
+// Settings often contain a trailing slash (e.g. https://qbit.example.com/).
+// Without this, `${clientUrl}/api/...` becomes `//api/...`, which many reverse
+// proxies reject with a 404. Strip all trailing slashes once at the boundary.
+const normalizeClientUrl = (url) => (url || '').replace(/\/+$/, '');
+
 export const addTorrent = async (
   torrentUrl,
   clientUrl,
@@ -9,6 +14,7 @@ export const addTorrent = async (
   path,
   category
 ) => {
+  clientUrl = normalizeClientUrl(clientUrl);
   let implementations = {
     qbit: async () => {
       XFetch.post(
@@ -121,6 +127,7 @@ export const addTorrent = async (
 };
 
 export async function testClient(clientUrl, username, password, client) {
+  clientUrl = normalizeClientUrl(clientUrl);
   let clients = {
     trans: async () => {
       let headers = {
@@ -211,6 +218,7 @@ export async function testClient(clientUrl, username, password, client) {
 }
 // TODO: new implementation - there should be a class for each client implementating the needed methods
 export const getCategories = async (clientUrl, username, password) => {
+  clientUrl = normalizeClientUrl(clientUrl);
   XFetch.post(
     `${clientUrl}/api/v2/auth/login`,
     `username=${username}&password=${password}`,
