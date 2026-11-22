@@ -19,10 +19,17 @@ GM_addStyle(`
     display: inline-block !important;
     width: 16px !important;
     height: 16px !important;
-    background-image: var(--s-gold-plus) !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-    background-size: contain !important;
+    /* mask keeps the site's glyph shape but lets us tint it to the same
+       anchor blue as the DL/RP/ED/PL icons instead of standing out green. */
+    -webkit-mask-image: var(--s-gold-plus) !important;
+    mask-image: var(--s-gold-plus) !important;
+    -webkit-mask-repeat: no-repeat !important;
+    mask-repeat: no-repeat !important;
+    -webkit-mask-position: center !important;
+    mask-position: center !important;
+    -webkit-mask-size: contain !important;
+    mask-size: contain !important;
+    background-color: #63ABE6 !important;
     vertical-align: middle !important;
   }
 `);
