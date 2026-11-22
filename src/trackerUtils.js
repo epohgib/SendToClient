@@ -183,6 +183,14 @@ const handlers = [
         let fl = Array.from(parent.querySelectorAll('a')).find(
           (a) => a.innerText === 'FL'
         );
+        // OPS and some other Gazelle sites put the surrounding [ ... ] in
+        // the parent element, outside the row we are rewriting. Detecting
+        // that pair here avoids emitting a second pair inside it.
+        const prevText = parent.previousSibling?.textContent?.trim() || '';
+        const nextText = parent.nextSibling?.textContent?.trim() || '';
+        const siteHasBrackets =
+          prevText.endsWith('[') && nextText.startsWith(']');
+
         let fst = fl
           ? VM.h(
               VM.Fragment,
@@ -200,13 +208,13 @@ const handlers = [
             VM.h(
               VM.Fragment,
               null,
-              '[\xA0',
+              siteHasBrackets ? null : '[\xA0',
               buttons.map((e) => VM.h(VM.Fragment, null, e, ' | ')),
               VM.h(STBTN, {
                 torrentUrl: torrentUrl,
               }),
               fst,
-              '\xA0]'
+              siteHasBrackets ? null : '\xA0]'
             )
           )
         );
