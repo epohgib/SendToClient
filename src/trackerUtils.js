@@ -168,6 +168,18 @@ const handlers = [
         let buttons = Array.from(parent.childNodes).filter(
           (e) => e.nodeName !== '#text'
         );
+        // Some Gazelle sites wrap the whole action row in a single element
+        // that already draws the surrounding [ ... ]. Unwrap it so we don't
+        // re-add a second pair of brackets around the row (issue: [[DL | ...]]).
+        if (
+          buttons.length === 1 &&
+          buttons[0].textContent.trim().startsWith('[') &&
+          buttons[0].textContent.trim().endsWith(']')
+        ) {
+          buttons = Array.from(buttons[0].childNodes).filter(
+            (e) => e.nodeName !== '#text'
+          );
+        }
         let fl = Array.from(parent.querySelectorAll('a')).find(
           (a) => a.innerText === 'FL'
         );

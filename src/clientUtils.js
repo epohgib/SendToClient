@@ -144,6 +144,13 @@ export async function testClient(clientUrl, username, password, client) {
         `username=${username}&password=${password}`,
         { 'content-type': 'application/x-www-form-urlencoded', cookie: 'SID=' }
       );
+      // qBittorrent 5.2.0 changed the login response from HTTP 200 with body
+      // "Ok." to HTTP 204 with an empty body (WebAPI change: "Send 204 when
+      // WebAPI response contains no data"). Accept both so the test works
+      // against 5.2+ as well as older releases.
+      if (res.raw.status === 204) {
+        return true;
+      }
       if ((await res.text()) === 'Ok.') {
         return true;
       }
