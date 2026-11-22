@@ -11,13 +11,21 @@ import { globalSettingsManager } from './globalSettingsManager.js';
 // Give the injected link its own icon so it shows up like DL/RP/ED/PL instead
 // of an empty box (or invisible text where the site's font-size:0 applies).
 GM_addStyle(`
+  a.sendtoclient {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
   a.sendtoclient::before {
-    content: '\\21E9' !important; /* downwards arrow with stem */
-    font-size: 1.1em !important;
-    color: #4caf50 !important;
+    content: '\\21E9' !important;
+    font-size: 1.4em !important;
+    font-weight: bold !important;
+    color: #00e676 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-shadow: 0 0 2px #000 !important;
   }
   a.sendtoclient:hover::before {
-    color: #2e7d32 !important;
+    color: #00ff88 !important;
   }
 `);
 
