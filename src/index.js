@@ -11,24 +11,19 @@ import { globalSettingsManager } from './globalSettingsManager.js';
 // Give the injected link its own icon so it shows up like DL/RP/ED/PL instead
 // of an empty box (or invisible text where the site's font-size:0 applies).
 GM_addStyle(`
-  a.sendtoclient {
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
+  /* The site's action icons are SVG background images (font-size:0 hides the
+     link text). Reuse its own green-plus glyph so the injected button matches
+     the DL/RP/ED/PL icons exactly in scale, alignment and colour. */
   a.sendtoclient::before {
-    content: '\\21E9' !important;
-    /* The site sets font-size:0 and line-height:0 on action links, so an
-       em-based size would resolve to 0. Use absolute px plus normal line height. */
-    font-size: 16px !important;
-    line-height: normal !important;
-    font-weight: bold !important;
-    color: #00e676 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    text-shadow: 0 0 2px #000 !important;
-  }
-  a.sendtoclient:hover::before {
-    color: #00ff88 !important;
+    content: '' !important;
+    display: inline-block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background-image: var(--s-gold-plus) !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: contain !important;
+    vertical-align: middle !important;
   }
 `);
 
