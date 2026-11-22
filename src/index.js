@@ -17,7 +17,10 @@ GM_addStyle(`
   }
   a.sendtoclient::before {
     content: '\\21E9' !important;
-    font-size: 1.4em !important;
+    /* The site sets font-size:0 and line-height:0 on action links, so an
+       em-based size would resolve to 0. Use absolute px plus normal line height. */
+    font-size: 16px !important;
+    line-height: normal !important;
     font-weight: bold !important;
     color: #00e676 !important;
     opacity: 1 !important;
